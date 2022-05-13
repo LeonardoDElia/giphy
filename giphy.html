@@ -1,0 +1,160 @@
+<!DOCTYPE html>
+<html>
+
+<head>
+    <meta charset="utf-8">
+    <title>Giphy</title>
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <style type="text/css">
+    @import url('https://fonts.googleapis.com/css2?family=Inter:wght@400;700&display=swap');
+
+    * {
+        margin: 0;
+        padding: 0;
+    }
+
+    #centro {
+        display: flex;
+        align-items: center;
+        justify-content: flex-start;
+        flex-direction: column;
+    }
+
+    .font {
+        font-family: 'Inter';
+        font-weight: bold;
+    }
+
+    #titolo {
+        font-size: 44px;
+        font-weight: bold;
+        line-height: 53px;
+    }
+
+    #cercaInput {
+        width: 322px;
+        height: 63px;
+        border-radius: 15px;
+        margin-top: 50px;
+        text-align: center;
+        font-size: 25px;
+        border: 1px solid black;
+    }
+
+    #form {
+        margin-top: 75px;
+        text-align: center;
+    }
+
+    #cercaBottone {
+        width: 322px;
+        height: 63px;
+        border-radius: 15px;
+        outline: none;
+        border: none;
+        background-color: #FF7E7E;
+        margin-top: 15px;
+        font-size: 25px;
+        font-weight: 400;
+    }
+
+    #risultato {
+        margin-top: 50px;
+    }
+
+    .carta {
+        width: 322px;
+        height: 212px;
+        margin-bottom: 15px;
+    }
+
+    .content {
+        width: 100%;
+        height: 100%;
+        max-width: 322px;
+        max-height: 212px;
+        display: flex;
+    }
+
+    .info {
+        display: flex;
+        flex-direction: column;
+        justify-content: space-between;
+        padding: 15px 25px 15px 25px;
+    }
+
+    .bianco {
+        color: #ffffff;
+    }
+    </style>
+</head>
+
+<body>
+    <section id="centro">
+        <div>
+            <form id="form">
+                <div>
+                    <label id="titolo" class="font">SHARE <br> YOUR GIF</label>
+                </div>
+                <div>
+                    <input id="cercaInput" type="text" name="search" placeholder="insert a string">
+                </div>
+                <div>
+                    <button id="cercaBottone" class="font" type="submit">Search on GIPHY</button>
+                </div>
+            </form>
+            <div id="risultato">
+            </div>
+        </div>
+    </section>
+    <script type="text/javascript">
+    let api = "https://api.giphy.com/v1/gifs/search?api_key=KEDa2c6Yu4qFbbDaDllxnPpELILbOVZ1&q="
+    let url = ""
+    let bottone = document.querySelector("#cercaBottone")
+    let conteinerCarte = document.querySelector("#risultato")
+
+
+    bottone.addEventListener("click", function(e) {
+        e.preventDefault()
+        conteinerCarte.innerHTML = ""
+        let userinput = document.querySelector("input[name=search]").value
+
+        url = api + userinput
+        let prom = fetch(url)
+
+        prom.then(
+            response => response.json()
+        ).then(
+            data => {
+                for (let i = 0; i < data.data.length; i++) {
+
+
+                    let d = document.createElement("div")
+
+                    d.innerHTML = `
+		<div class="carta"  style="background-image: url(${data.data[i].images.downsized.url});background-size: cover;background-position: center">
+				<div class="content">
+					<div class="info">
+						<div>
+							<h2 class="font bianco style ="font-size: 20px; margin-bottom: 5px">${data.data[i].title}</h2>
+							<h3 class="font bianco style ="font-size: 16px; margin-bottom: 5px">uploaded by <span class="font bianco style ="font-size: 16px"">${data.data[i].username}</span></h3>
+							<p class="font bianco style ="font-size: 12px">on <span class="font bianco style ="font-size: 12px"">${data.data[i].import_datetime}</span></p>
+						</div>
+						<div>
+							<a href="${data.data[i].id}" style="margin-right: 30px" target="_blank"><img src="link.svg"></a>
+							<a href="${data.data[i].embed_url}" target="_blank"><img src="embed.svg"></a>
+						</div>
+					</div>
+				</div>
+			</div>`
+                    conteinerCarte.append(d)
+                }
+            }
+
+        )
+
+    })
+    </script>
+</body>
+
+</html>
